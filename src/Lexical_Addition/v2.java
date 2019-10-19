@@ -5,25 +5,26 @@ import java.lang.*;
 import java.io.*;
 
 class v2 {
+
+    private static long MAX_LEN;
+    private static long result, min, max;
+
     public static void main(String[] args) throws java.lang.Exception {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         String[] line = in.readLine().split(" ");
-        long N = Long.parseLong(line[0]);
-        long A = Long.parseLong(line[1]);
-        long B = Long.parseLong(line[2]);
+        result = Long.parseLong(line[0]);
+        min = Long.parseLong(line[1]);
+        max = Long.parseLong(line[2]);
 
-        final long MAX_LEN = N/A;
-        long[] solution = new long[(int) MAX_LEN];
+        MAX_LEN = result/min;
 
-        if (B >= N) {
-            System.out.println("YES\n" + N);
+        if (max >= result) {
+            System.out.println("YES\n" + result);
         } else {
-            long index = MAX_LEN;
-            for (; index > 1; index--) {
+            ArrayList<Long> solution = new ArrayList<>();
+            solution = guessSol(solution, max);
 
-            }
-
-            if (solution[0] == 0) {
+            if (solution == null) {
                 System.out.println("NO");
             } else {
                 System.out.println("YES");
@@ -34,5 +35,32 @@ class v2 {
                 }
             }
         }
+    }
+
+    private static ArrayList<Long> guessSol(ArrayList<Long> array, long running) {
+
+        if (running < min || array.size() > MAX_LEN) {
+            return null;
+        }
+
+        long remainder = result - add(array) - running;
+        if (remainder > min && remainder < max) {
+            array.add(running);
+            return array;
+        } else {
+            ArrayList<Long> guess = null;
+            for (int i = 1; i <= max - min && guess == null; i++) {
+                guess = guessSol(array, running - i);
+            }
+            return guess;
+        }
+    }
+
+    private static long add(ArrayList<Long> array) {
+        long result = 0;
+        for (long val : array) {
+            result += val;
+        }
+        return result;
     }
 }
