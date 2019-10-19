@@ -28,6 +28,7 @@ class v2 {
                 System.out.println("NO");
             } else {
                 System.out.println("YES");
+                Collections.reverse(solution);
                 for (long value : solution) {
                     if (value != 0) {
                         System.out.print(value + " ");
@@ -43,14 +44,16 @@ class v2 {
             return null;
         }
 
-        long remainder = result - add(array) - running;
-        if (remainder > min && remainder < max) {
-            array.add(running);
+        long remainder = result - add(array);
+        if (remainder >= min && remainder <= max) {
+            array.add(remainder);
             return array;
         } else {
             ArrayList<Long> guess = null;
-            for (int i = 1; i <= max - min && guess == null; i++) {
-                guess = guessSol(array, running - i);
+            for (int i = 0; i <= max - min && guess == null; i++) {
+                ArrayList<Long> newArray = (ArrayList<Long>) array.clone();
+                newArray.add(running);
+                guess = guessSol(newArray, running - i);
             }
             return guess;
         }
