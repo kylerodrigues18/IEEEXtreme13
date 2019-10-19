@@ -54,7 +54,7 @@ public class v1 {
 
                 for (int purchase = 0; purchase < purchaseLoc.size(); purchase++) {
                     //Temporarily move the merchant to the purchase location
-                    merchantsPosition.set(merchantInitLocation, purchaseLoc.get(purchase));
+                    merchantsPosition.set(i, purchaseLoc.get(purchase));
 
                     //if the purchase location is found in the merchant position, then do nothing since a merchant is located in that city
                     if (merchantsPosition.indexOf(purchaseLoc.get(purchase)) == -1) {
@@ -80,7 +80,7 @@ public class v1 {
                 }
                 merchantsPosition.set(i, merchantInitLocation);
             }
-            merchantsPosition.remove(merchant);
+            merchantsPosition.set(merchant, sellingLocation);
             totalCost += cost;
             cost = 0;
         }
