@@ -8,19 +8,26 @@ import java.lang.*;
 class v1 {
     public static void main(String[] args) throws java.lang.Exception {
         Scanner in = new Scanner(System.in);
-        String s = "YES/n";
+        String s = "YES";
         int size = in.nextInt();
         int min = in.nextInt();
         int max = in.nextInt();
 
         ArrayList<Integer> arrayList = new ArrayList<Integer>();
-        while (size(arrayList) < size) {
+        while (size(arrayList) <  size - max) {
             arrayList.add(max);
+        }
+
+        for (int i = max; i >= min; i--) {
+            if(size(arrayList) + i <= size) {
+                arrayList.add(i);
+            }
         }
 
         while (size(arrayList) <= size && size(arrayList) != 0) {
             if (size(arrayList) == size) {
-                s += updateAnswer(s, arrayList);
+                System.out.println(s);
+                printAnswerLine(arrayList);
                 if (arrayList.get(arrayList.size() - 1) - 1 < min) {
                     arrayList.remove(arrayList.size() - 1);
                 } else {
@@ -38,13 +45,6 @@ class v1 {
                 }
             }
         }
-
-        if (s.length() <= 5) {
-            System.out.println("NO");
-        } else {
-            System.out.println(s);
-        }
-
     }
 
     public static int size(ArrayList<Integer> arrayList) {
@@ -55,12 +55,12 @@ class v1 {
         return size;
     }
 
-    public static String updateAnswer(String s, ArrayList<Integer> integers) {
+    public static void printAnswerLine(ArrayList<Integer> integers) {
+        String s = "";
         for (int i : integers) {
             s += i + " ";
         }
         s = s.substring(0, s.length() - 1);
-        s += "/n";
-        return s;
+        System.out.println(s);
     }
 }
