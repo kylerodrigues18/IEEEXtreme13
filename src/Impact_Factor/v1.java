@@ -23,14 +23,42 @@ public class v1 {
         for(int i = 1; i < numStrings; i++) {
             publications = getCitationCount(data.get(i), publications);
         }
+
+        //Populate ArrayList to output
         for(Publication publication: publications) {
-            String title = publication.publicationTitle;
             double c = publication.citationCount;
             double p = publication.publicationCount;
-            double inferedFactor = c/p;
-            inferedFactor = (double)Math.round(inferedFactor * 100d) / 100d;
-            DecimalFormat df = new DecimalFormat("#.00");
-            System.out.println(publication.publicationTitle + ": " + df.format(inferedFactor));
+            if(p == 0 || c == 0){
+                publication.impactFactor = "0.00";
+            } else {
+                double inferedFactor = c / p;
+                DecimalFormat df = new DecimalFormat("#.00");
+
+                if(inferedFactor < 1) {
+                    publication.impactFactor = "0" + df.format(inferedFactor);
+                } else {
+                    publication.impactFactor = df.format(inferedFactor);
+                }
+            }
+        }
+
+        ArrayList<Publication> output = new ArrayList<>();
+        //Sort ArrayList to output
+        while(publications.size() != 0) {
+            int counter = 0;
+            double smallestImpactFactor = Double.parseDouble(publications.get(0).impactFactor);
+            for (int i = 1; i < publications.size(); i++) {
+                if(smallestImpactFactor > Double.parseDouble(publications.get(i).impactFactor)) {
+                    smallestImpactFactor = Double.parseDouble(publications.get(i).impactFactor);
+                    counter = i;
+                }
+            }
+            output.add(publications.get(counter));
+            publications.remove(counter);
+        }
+
+        for(int i = output.size() - 1; i >=  0; i--) {
+            System.out.println(output.get(i).publicationTitle + ": " + output.get(i).impactFactor);
         }
     }
 
@@ -53,21 +81,15 @@ public class v1 {
             int pubNum1 = data.indexOf("publicationNumber : ");
             int pubNum2 = data.indexOf(",");
             publication.publicationNumber = data.substring(pubNum1 + 20, pubNum2);
-            data = data.substring(pubNum2 + 1);
+            data = data.substring(data.indexOf("year :"));
 
             //add Publication first year
-            int yearOneNum1 = data.indexOf("year : ");
-            int yearOneNum2 = data.indexOf(",");
-            publication.articleYearFirst = data.substring(yearOneNum1 + 7, yearOneNum2);
             int publicationCountYear1 = data.indexOf("articleCount : ");
             int endPubCountIndex = data.indexOf("}");
             publication.publicationCount += Integer.parseInt(data.substring(publicationCountYear1 + 15, endPubCountIndex));
             data = data.substring(data.indexOf("},") + 2);
 
             //add Publication first year
-            int yearTwoNum1 = data.indexOf("year : ");
-            int yearTwoNum2 = data.indexOf(",");
-            publication.articleYearSecond = data.substring(yearTwoNum1 + 7, yearTwoNum2);
             int publicationCountYear2 = data.indexOf("articleCount : ");
             int endPub2CountIndex = data.indexOf("}");
             publication.publicationCount += Integer.parseInt(data.substring(publicationCountYear2 + 15, endPub2CountIndex));
@@ -109,14 +131,16 @@ public class v1 {
         int citationCount;
         //Found in header
         int publicationCount;
+        String impactFactor;
 
         Publication() {
             publicationTitle = "";
             publicationNumber = "";
-            articleYearFirst = "";
-            articleYearSecond = "";
+            articleYearFirst = "2017";
+            articleYearSecond = "2018";
             citationCount = 0;
             publicationCount = 0;
+            impactFactor = "";
         }
 
         Publication(String publicationTitle, String publicationNumber, String articleYearFirst, String articleYearSecond) {
