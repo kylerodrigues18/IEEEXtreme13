@@ -17,7 +17,11 @@ public class v1 {
         }
 
         //Store the publication data
-        addPublications(data.get(0));
+        ArrayList<Publication> publications = addPublications(data.get(0));
+
+        for(int i = 1; i < numStrings; i++) {
+            publications = getCitationCount(data.get(i), publications);
+        }
     }
 
     public static ArrayList<Publication> addPublications(String data) {
@@ -46,20 +50,28 @@ public class v1 {
             int yearOneNum1 = data.indexOf("year : ");
             int yearOneNum2 = data.indexOf(",");
             publication.articleYearFirst = data.substring(yearOneNum1 + 7, yearOneNum2);
+            int publicationCountYear1 = data.indexOf("articleCount : ");
+            int endPubCountIndex = data.indexOf("}");
+            publication.publicationCount += Integer.parseInt(data.substring(publicationCountYear1 + 15, endPubCountIndex));
             data = data.substring(data.indexOf("},") + 2);
 
             //add Publication first year
             int yearTwoNum1 = data.indexOf("year : ");
             int yearTwoNum2 = data.indexOf(",");
             publication.articleYearSecond = data.substring(yearTwoNum1 + 7, yearTwoNum2);
+            int publicationCountYear2 = data.indexOf("articleCount : ");
+            int endPub2CountIndex = data.indexOf("}");
+            publication.publicationCount += Integer.parseInt(data.substring(publicationCountYear2 + 15, endPub2CountIndex));
             data = data.substring(data.indexOf("},") + 2);
+
             //add Publication to ArrayList
             publications.add(publication);
-            System.out.println(publication.publicationTitle);
-            System.out.println(publication.publicationNumber);
-            System.out.println(publication.articleYearFirst);
-            System.out.println(publication.articleYearSecond);
         }
+        return publications;
+    }
+
+    public static ArrayList<Publication> getCitationCount(String data, ArrayList<Publication> publications) {
+
         return publications;
     }
 
@@ -68,12 +80,18 @@ public class v1 {
         String publicationNumber;
         String articleYearFirst;
         String articleYearSecond;
+        //found through parsing through all data
+        int citationCount;
+        //Found in header
+        int publicationCount;
 
         Publication() {
             publicationTitle = "";
             publicationNumber = "";
             articleYearFirst = "";
             articleYearSecond = "";
+            citationCount = 0;
+            publicationCount = 0;
         }
 
         Publication(String publicationTitle, String publicationNumber, String articleYearFirst, String articleYearSecond) {
