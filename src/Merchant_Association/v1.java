@@ -9,7 +9,7 @@ public class v1 {
         Scanner in = new Scanner(System.in);
         int numTowns = in.nextInt();
         int[] townPrices = new int[numTowns];
-        ArrayList<HashMap> routes = new ArrayList<>();
+        HashMap<Integer, ArrayList<Integer>> routes = new HashMap<>();
         int[] merchantsPosition;
 
         //init prices array
@@ -17,11 +17,17 @@ public class v1 {
             townPrices[i] = in.nextInt();
         }
 
+        for (int i = 1; i <= numTowns; i++) {
+            routes.put(i, new ArrayList<>());
+        }
+
         //init ArrayList of routes
-        for(int i = 0; i < numTowns - 1; i++) {
-            HashMap hashMap = new HashMap();
-            hashMap.put(in.nextInt(), in.nextInt());
-            routes.add(hashMap);
+        for(int i = 1; i < numTowns; i++) {
+            int from = in.nextInt();
+            int to = in.nextInt();
+
+            routes.get(from).add(to);
+            routes.get(to).add(from);
         }
 
         //init merchant position array
