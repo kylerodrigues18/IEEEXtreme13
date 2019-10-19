@@ -1,6 +1,7 @@
 package Impact_Factor;
 
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
@@ -22,15 +23,23 @@ public class v1 {
         for(int i = 1; i < numStrings; i++) {
             publications = getCitationCount(data.get(i), publications);
         }
+        for(Publication publication: publications) {
+            String title = publication.publicationTitle;
+            double c = publication.citationCount;
+            double p = publication.publicationCount;
+            double inferedFactor = c/p;
+            inferedFactor = (double)Math.round(inferedFactor * 100d) / 100d;
+            DecimalFormat df = new DecimalFormat("#.00");
+            System.out.println(publication.publicationTitle + ": " + df.format(inferedFactor));
+        }
     }
 
     public static ArrayList<Publication> addPublications(String data) {
         ArrayList<Publication> publications = new ArrayList<>();
-        data = data.replace("\"publications\": ", "");
-        data = data.substring(2, data.length() - 2);
         data = data.replace("\"", "");
 
         while(data.contains("publicationTitle :")) {
+            data = data.substring(data.indexOf("publicationTitle : "));
             //Initialize Publication to be added to ArrayList
             Publication publication = new Publication();
 
@@ -71,7 +80,23 @@ public class v1 {
     }
 
     public static ArrayList<Publication> getCitationCount(String data, ArrayList<Publication> publications) {
-
+        data = data.replace("\"", "");
+        data = data.substring(data.indexOf("publicationNumber :"));
+        while(data.contains("publicationNumber")) {
+            data = data.substring(data.indexOf("publicationNumber"));
+            int firstPos = data.indexOf("publicationNumber :");
+            int secondPos = data.indexOf(",");
+            int pubNum = Integer.parseInt(data.substring(firstPos + 20, secondPos));
+            for (Publication p: publications) {
+                if(Integer.parseInt(p.publicationNumber) == pubNum) {
+                    int year = Integer.parseInt(data.substring(data.indexOf("year : ") + 7, data.indexOf("year : ") + 11));
+                    if(Integer.parseInt(p.articleYearFirst) == year || Integer.parseInt(p.articleYearSecond) == year) {
+                        p.citationCount++;
+                    }
+                }
+            }
+            data= data.substring(secondPos);
+        }
         return publications;
     }
 
