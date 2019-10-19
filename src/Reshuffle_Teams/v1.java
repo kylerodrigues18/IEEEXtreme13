@@ -8,24 +8,38 @@ public class v1 {
         Scanner in = new Scanner(System.in);
         int numInput = in.nextInt();
         ArrayList<String> input = new ArrayList<>();
+        in.nextLine();
         for(int i = 0; i < numInput; i++) {
-            String temp = in.nextLine();
-            char[] chars = temp.toCharArray();
-            ArrayList<char[]> arrayList = new ArrayList<>();
-            String s = "";
-            for(int c = 0; c < chars.length - 1; c++) {
-                if(chars[c] == chars[c + 1]) {
-                    s += chars[c];
-                } else {
-                    if(s.length() == 0) {
-                        s = "" + chars[c];
-                        arrayList.add(s.toCharArray());
-                        s = "";
-                    } else {
-                        arrayList.add(s.toCharArray());
-                        s = "";
-                    }
+            input.add(in.nextLine());
+        }
+        int counter = 0;
+        for (String s: input) {
+            counter = 0;
+            for(int i = 1; i < s.length(); i++) {
+                if(s.charAt(i) != s.charAt(i - 1)) {
+                    counter++;
                 }
+            }
+            if(s.charAt(0) == s.charAt(s.length() - 1)) {
+                counter--;
+            }
+            if(s.contains("A")) {
+                --counter;
+            }
+            if(s.contains("B")) {
+                --counter;
+            }
+            if(s.contains("C")) {
+                --counter;
+            }
+            if(s.contains("D")) {
+                --counter;
+            }
+            ++counter;
+            if (counter < 0) {
+                System.out.println(0);
+            } else {
+                System.out.println(counter);
             }
         }
     }
